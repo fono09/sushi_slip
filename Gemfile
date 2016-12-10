@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+gem 'sinatra'
+gem 'puma'
+gem 'barby'
+gem 'cairo'
+gem 'pango'
