@@ -33,36 +33,46 @@ data = {
 	]
 }
 
-require 'pango'
+require 'RMagick'
 
-format = Cairo::FORMAT_ARGB32
 width = 700
 height = 300 + data[:items].length*40
 
-def draw_text(context,layout,x,y,text)
-	context.move_to(x,y)
-	layout.text = text
-	context.show_pango_layout(layout)
-end
+image_list = Magick::ImageList.new
+image = Magick::Image.new(width,height){
+	self.background_color = 'white'
+}
+font = "ipagp.ttf"
+big_pointsize = 20
+small_pointsize = 15
 
-surface = Cairo::ImageSurface.new(format, width, height)
-context = Cairo::Context.new(surface)
-layout = context.create_pango_layout
-
-current_x = 0
 current_y = 0
 
+# 印字
+draw = Magick::Draw.new
+current_y += big_pointsize
+draw.annotate(image, width, height, 0, current_y, data[:chain_name] + ' ' + data[:store_name] + ' 店') do
+	self.font = font
+	self.fill = 'black'
+	self.stroke = 'transparent'
+	self.pointsize = big_pointsize
+	self.gravity = Magick::NorthGravity
+end
+current_y += big_ponintsize
+
+#draw.annotate(image, width, height, 0, current_y, data[
+
+
+draw = Magick::Draw.new
+draw.annotate(
+image.write("test.png")
+
+
+def draw_text(context,layout,x,y,text)
+end
+
+
 # 背景
-context.set_source_rgb(1,1,1)
-context.rectangle(0,0,width,height)
-context.fill
 
 # 印字
-context.set_source_rgb(0,0,0)
-context.select_font_face('IPAPGothic')
-layout.alignment = Pango::Layout::ALIGN_CENTER
-layout.justify = true
-draw_text(context,layout,0,0,data[:chain_name] + data[:store_name])
-
-surface.write_to_png("test.png")
 
